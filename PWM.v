@@ -1,5 +1,3 @@
-`timescale 1ns / 1ns
-
 module PWM_generator (
     input clk, reset, 
     input [6:0] in,
@@ -17,7 +15,7 @@ always@(posedge clk) begin
       if(ou==1) begin
       	upto <= in;
       end
-      else upto <= (7'b1100100 - in);
+      else upto <= (7'h64 - in);
     end
 end
 
