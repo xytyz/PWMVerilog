@@ -2,29 +2,31 @@
 
 module PWM_generator (
     input clk, reset, 
-    input [7:0] On_time,
-    output reg PWM_out
+    input [6:0] in,
+    output reg ou
 );
 
-reg [7:0] count; 
+  reg [6:0] count,upto; 
 
 always@(posedge clk) begin
-    if (reset) begin
-        PWM_out <= 8'b0;
+  if (!reset) begin //reset at 0
+        ou <= 0;
+        count<=0;
     end
     else begin
-        if(PWM_out==1'b0) begin
-            if(count == On_time) PWM_out<=1'b0;
-            else count=count+1;
-        end
-        else begin
-            if(count== (7'd100 - On_time)) PWM_out<=1'b1;
-            else count=count+1;
-        end
+      if(ou==1) begin
+      	upto <= in;
+      end
+      else upto <= (7'b1100100 - in);
     end
 end
 
-always@(PWM_out) begin
- count<=0;
-end
+  always@(posedge clk)begin
+    if(count == upto) begin 
+    	ou=~ou;
+      	count=0;
+    end
+    else count=count+1;
+  end
+  
 endmodule
