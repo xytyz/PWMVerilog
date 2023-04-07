@@ -1,30 +1,25 @@
-module PWM_generator (
+module PWM (
+    output reg ou,
     input clk, reset, 
-    input [6:0] in,
-    output reg ou
+    input [6:0] in
 );
 
-  reg [6:0] count,upto; 
+  reg [6:0] count; 
 
-always@(posedge clk) begin
-  if (!reset) begin //reset at 0
-        ou <= 0;
-        count<=0;
-    end
+always@(posedge clk) 
+  begin
+      if (in > count)
+      ou <= 1;
+    else
+      ou <= 0;
+  end
+  
+  always@(posedge clk) begin
+    if(!reset) count=0;
     else begin
-      if(ou==1) begin
-      	upto <= in;
-      end
-      else upto <= (7'h64 - in);
+      if(count==7'd100) count=0;
+      else count= count + 1'b1;
     end
-end
-
-  always@(posedge clk)begin
-    if(count == upto) begin 
-    	ou=~ou;
-      	count=0;
-    end
-    else count=count+1;
   end
   
 endmodule
